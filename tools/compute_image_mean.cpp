@@ -47,9 +47,13 @@ int main(int argc, char** argv) {
 
   BlobProto sum_blob;
   int count = 0;
-  // load first datum
+
+  // load first AnnotatedDatum
   Datum datum;
-  datum.ParseFromString(cursor->value());
+  AnnotatedDatum aDatum;
+
+  aDatum.ParseFromString(cursor->value());
+  datum = aDatum.datum();
 
   if (DecodeDatumNative(&datum)) {
     LOG(INFO) << "Decoding Datum";
@@ -68,7 +72,10 @@ int main(int argc, char** argv) {
   LOG(INFO) << "Starting Iteration";
   while (cursor->valid()) {
     Datum datum;
-    datum.ParseFromString(cursor->value());
+    AnnotatedDatum aDatum;
+
+    aDatum.ParseFromString(cursor->value());
+    datum = aDatum.datum();
     DecodeDatumNative(&datum);
 
     const std::string& data = datum.data();
